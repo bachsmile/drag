@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="bg" @drop="drop" @dragover.prevent="allowDrop">
+    <div class="bg" @drop.stop="drop" @dragover.prevent="allowDrop">
       <component
         :is="item.component"
         v-for="(item, index) in items"
@@ -21,6 +21,7 @@ import BxDragDrop from '../components/common/BxDragDrop.vue'
 import CmDragDrop from '../components/common/CmDragDrop.vue'
 import CardDrag from '../components/domain/CardDrag.vue'
 import ImageDrag from '../components/domain/ImageDrag.vue'
+import Pannel from '../components/domain/Pannel.vue'
 import TextEditDrag from '@/components/domain/TextEditDrag.vue'
 
 export default {
@@ -34,6 +35,7 @@ export default {
     TextEditDrag,
     CardDrag,
     ImageDrag,
+    Pannel,
   },
   data() {
     return {
@@ -49,7 +51,7 @@ export default {
       console.log(this.items)
     },
     allowDrop(e){
-      console.log('allowDrop')
+      // console.log('allowDrop')
     },
   },
 }

@@ -62,6 +62,20 @@ export default {
             w: 'auto',
             h: 'auto'
           }
+        },
+        {
+          typeId: 3,
+          type: 'Pannel',
+          component: 'Pannel',
+          title: 'Pannel',
+          position: {
+            x: 100,
+            y: 100
+          },
+          size: {
+            w: 300,
+            h: 100
+          }
         }
       ]
     }

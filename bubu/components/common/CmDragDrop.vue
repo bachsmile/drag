@@ -1,5 +1,10 @@
 <template>
-  <div class="draggable-common" :class="classList">
+  <div
+    class="draggable-common"
+    :class="classList"
+    @mouseover="mouseover"
+    @mouseleave="mouseleave"
+  >
     <vue-draggable-resizable
       ref="slotElm"
       :key="key"
@@ -10,6 +15,8 @@
       :z="z"
       :class="{'my-class1': isBorder}"
       :onResizeStart="onResizeStart"
+      :on-drag-start="onDragStart"
+      :onDrag="onDragCallback"
       :resizable="resizable"
       :handles="handles"
       @resizing="onResize"
@@ -20,11 +27,10 @@
       <div
         :id="key"
         class="style"
-        @mouseover="mouseover"
       >
         <slot class=" hiden"></slot>
       </div>
-      <div class="optionTopIn">
+      <div v-if="isShowSetting" class="optionTopIn">
         <div class="optionBox pointShow">
           <font-awesome-icon class="font-awesome-icon icon-setting" :icon="['fas', 'tools']" inverse @click="openSetting(key)" />
         </div>
@@ -47,81 +53,140 @@
             <h1 for="">
               {{ key }}
             </h1>
+            <div class="form-group pt-2">
+              <div class="row d-flex my-2 justify-content-around">
+                <div class="col-3 d-flex align-items-center">
+                  <h5 class="p-0 mb-0">
+                    Width
+                  </h5>
+                </div>
+                <div class="col-3 d-flex align-items-center">
+                  <label for="" class="mr-1 mb-0">Auto</label>
+                  <input id="" v-model="isAuto.w" type="checkbox" name="" @change="pickAuto('w')">
+                </div>
+                <div class="col-3 d-flex align-items-center">
+                  <label for="" class="mr-1 mb-0">Full</label>
+                  <input id="" v-model="isFull.w" type="checkbox" name="" @change="pickFull('wf')">
+                </div>
+              </div>
+              <input
+                id=""
+                v-model="boxSetting.w"
+                :disabled="isAuto.w"
+                type="number"
+                class="form-control"
+                name="z-indexID"
+                aria-describedby="helpId"
+                placeholder=""
+                @change="onChange('w')"
+              >
+            </div>
            
-            <label for="">Width</label>
-            <div class="row d-flex">
-              <div class="col-9">
-                <input
-                  id=""
-                  v-model="inputOption.w"
-                  :disabled="isAuto.w"
-                  type="number"
-                  class="form-control"
-                  name="z-indexID"
-                  aria-describedby="helpId"
-                  placeholder=""
-                  @change="onChange('w')"
-                >
+            <div class="form-group pt-2">
+              <div class="row d-flex my-2 justify-content-around">
+                <div class="col-3 d-flex align-items-center">
+                  <h5 class="p-0 mb-0">
+                    Height
+                  </h5>
+                </div>
+                <div class="col-3 d-flex align-items-center">
+                  <label for="" class="mr-1">Auto</label>
+                  <input id="" v-model="isAuto.h" type="checkbox" name="" @change="pickAuto('h')">
+                </div>
+                <div class="col-3 d-flex align-items-center">
+                  <label for="" class="mr-1 mb-0">Full</label>
+                  <input id="" v-model="isFull.h" type="checkbox" name="" @change="pickFull('hf')">
+                </div>
               </div>
-              <div class="col-3 d-flex align-items-center">
-                <label for="" class="mr-1">Auto</label>
-                <input id="" v-model="isAuto.w" type="checkbox" name="" @change="pickAuto('w')">
-              </div>
+              <input
+                id=""
+                v-model="boxSetting.h"
+                :disabled="isAuto.h"
+                type="number"
+                class="form-control"
+                name="z-indexID"
+                aria-describedby="helpId"
+                placeholder=""
+                @change="onChange('h')"
+              >
             </div>
-            <label for="">Height</label>
-            <div class="row d-flex">
-              <div class="col-9">
-                <input
-                  id=""
-                  v-model="inputOption.h"
-                  :disabled="isAuto.h"
-                  type="number"
-                  class="form-control"
-                  name="z-indexID"
-                  aria-describedby="helpId"
-                  placeholder=""
-                  @change="onChange('h')"
-                >
-              </div>
-              <div class="col-3 d-flex align-items-center">
-                <label for="" class="mr-1">Auto</label>
-                <input id="" v-model="isAuto.h" type="checkbox" name="" @change="pickAuto('h')">
-              </div>
+
+            <div class="form-group">
+              <label for=""><h5>Color</h5></label>
+              <input
+                id="head"
+                v-model="boxSetting.color"
+                type="color"
+                name="head"
+                class="form-control"
+                @change="pickColor"
+              >
             </div>
-            <label for="">x</label>
-            <input
-              id=""
-              v-model="inputOption.x"
-              type="number"
-              class="form-control"
-              name="z-indexID"
-              aria-describedby="helpId"
-              placeholder=""
-              @change="onChange('h')"
-            >
-            <label for="">y</label>
-            <input
-              id=""
-              v-model="inputOption.y"
-              type="number"
-              class="form-control"
-              name="z-indexID"
-              aria-describedby="helpId"
-              placeholder=""
-              @change="onChange('h')"
-            >
-            <label for="">z</label>
-            <input
-              id="z-indexID"
-              v-model="inputOption.z"
-              type="number"
-              class="form-control"
-              name="z-indexID"
-              aria-describedby="helpId"
-              placeholder=""
-              @change="onChange('z')"
-            >
-            <small id="helpId" class="form-text text-muted">Help text</small>
+            
+            <div class="form-group">
+              <label for=""><h5>z</h5></label>
+              <input
+                id=""
+                v-model="boxSetting.x"
+                type="number"
+                class="form-control"
+                name="z-indexID"
+                aria-describedby="helpId"
+                placeholder=""
+                @change="onChange('h')"
+              >
+            </div>
+           
+            <div class="form-group">
+              <label for=""><h5>y</h5></label>
+              <input
+                id=""
+                v-model="boxSetting.y"
+                type="number"
+                class="form-control"
+                name="z-indexID"
+                aria-describedby="helpId"
+                placeholder=""
+                @change="onChange('h')"
+              >
+            </div>
+           
+            <div class="form-group">
+              <label for=""><h5>z</h5></label>
+              <input
+                id="z-indexID"
+                v-model="boxSetting.z"
+                type="number"
+                class="form-control"
+                name="z-indexID"
+                aria-describedby="helpId"
+                placeholder=""
+                @change="onChange('z')"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for=""><h5>Background img</h5></label>
+              <button class="w-100 btn-outline-primary" @click="openFolderImg">
+                Import IMG
+              </button>
+              <img
+                v-if="boxSetting.bg"
+                class="setting-box-img"
+                :src="boxSetting.bg"
+                alt=""
+              >
+              <input
+                id="file"
+                ref="btnLoadImg"
+                type="file"
+                accept="image/*"
+                name="image"
+                class="border d-none"
+                @change="loadFile($event)"
+              >
+            </div>
+            <small id="helpId" class="form-text text-muted">Develop XB</small>
           </div>
         </b-list-group-item>
       </b-list-group>
@@ -131,7 +196,6 @@
 
 <script>
 import VueDraggableResizable from 'vue-draggable-resizable'
-
 export default {
  components:{VueDraggableResizable},
  props: {
@@ -174,6 +238,10 @@ export default {
        w: false,
        h: false
      },
+     isFull : {
+       w: false,
+       h: false
+     },
      sizeAuto: {
        w: 0,
        h: 0
@@ -183,7 +251,9 @@ export default {
      isActice: false,
      isBorder: true,
      idActive: null,
+     isShowSetting: true,
      settingShow:false,
+    draging:false,
      key:null,
      heightDrag: 'auto',
      widthDrag: 'auto',
@@ -196,13 +266,19 @@ export default {
        w: null,
        h: null,
      },
-      inputOption: {
-        x: null,
-        y: null,
-        z: null,
-        w: null,
-        h: null,
-      }
+    boxSetting: {
+      x: null,
+      y: null,
+      z: null,
+      w: null,
+      h: null,
+      color: '#ffffff',
+      bg:'',
+    },
+    maxSize: {
+      w: 0,
+      h: 0
+    }
    }
  },
  watch: {
@@ -228,7 +304,10 @@ export default {
  },
  
   mounted() {
-   console.log(this.w)
+   this.maxSize = {
+     w: window.innerWidth,
+     h: window.innerHeight
+   }
   this.option = {
     ...this.option,
     ...{x: this.x},
@@ -240,6 +319,9 @@ export default {
     
   this.isAuto.w = this.option.w === 'auto' 
   this.isAuto.h = this.option.h === 'auto' 
+ 
+  this.pickAuto()
+
    setTimeout(()=> {
      this.sizeAuto = this.getSizeAuto('slotElm')
    }, 0)
@@ -249,6 +331,9 @@ export default {
   randomProperty() {
     this.key = Math.random().toString(36).substr(2, 3) + "-" + Math.random().toString(36).substr(2, 3) + "-" + Math.random().toString(36).substr(2, 4)
   },
+  changeAttrRefDrag(attr, value){
+     this.$refs.slotElm[attr] = value || 0
+  },
   onChange(payload){
     const size = {
         w: this.widthDrag,
@@ -256,12 +341,12 @@ export default {
       }
     switch (payload) {
       case 'h':
-        this.option.h = parseInt(this.inputOption.h)
+        this.option.h = parseInt(this.boxSetting.h)
         size.h=this.option.h
         break
       case 'w':
        
-          this.option.w = parseInt(this.inputOption.w)
+          this.option.w = parseInt(this.boxSetting.w)
           size.w=this.option.w
         break
       case 'x':
@@ -277,19 +362,23 @@ export default {
   onDrag(left, top) {
     this.isBorder = false
   },
+  onDragStart(){
+    //  this.option.w =  this.option.w -10
+  },
   onDragStop(x,y){
    console.log(this.$store.state.dragable.size)
     this.isBorder = true
+    //  this.option.w =  this.option.w +10
   },
   onResize(left, top, width, height) {
     
     if( !this.isAuto.w) {
       this.option.w = parseInt(width)
-        this.inputOption.w = parseInt(width)
+        this.boxSetting.w = parseInt(width)
     }
     if( !this.isAuto.h) {
       this.option.h = parseInt(height)
-        this.inputOption.h = parseInt(height)
+      this.boxSetting.h = parseInt(height)
     }
      const size = {
       w: width,
@@ -316,6 +405,9 @@ export default {
   onResizeStop(left, top, width, height) {
      this.isBorder = true
   },
+  onDragCallback(x,y){
+      // if(x < 0 || y < 0 || x + this.option.w > this.maxSize.w || x + this.option.w > this.maxSize.w) return false
+  },
   openSetting(id){
     const store = this.$store.state.dragable.isSetting
     if(!store) {
@@ -338,6 +430,7 @@ export default {
     })
   },
   getSizeAuto(refs){
+    console.log(this.$refs)
     const size = {
       w: this.$refs[refs].$el.clientWidth,
       h: this.$refs[refs].$el.clientHeight
@@ -345,7 +438,6 @@ export default {
      return size
   },
   setSizeAuto(type){
-    console.log(this.option)
     if (this.option.w === 'auto' && this.option.h === 'auto'){
       this.option.w = this.sizeAuto.w
       this.option.h = this.sizeAuto.h
@@ -370,10 +462,24 @@ export default {
         this.handles = this.handles.length? array : [...this.handles, ...array]
       } 
   },
+  pickFull(e){
+  
+    if(e==='wf'&& this.isFull.w){
+      this.option.w = this.maxSize.w
+      this.option.x = 0
+      this.changeAttrRefDrag('left')
+    }
+    if(e==='hf'){
+      this.option.h = this.maxSize.h
+      this.option.y = 0
+      this.changeAttrRefDrag('top')
+    }
+    this.$emit('size', this.option)
+  },
   pickAuto(e){
     console.log(this.getSizeAuto('slotElm'))
-    this.inputOption.w = this.isAuto.w ? null : this.getSizeAuto('slotElm').w
-    this.inputOption.h = this.isAuto.h ? null : this.getSizeAuto('slotElm').h
+    this.boxSetting.w = this.isAuto.w ? null : this.getSizeAuto('slotElm').w
+    this.boxSetting.h = this.isAuto.h ? null : this.getSizeAuto('slotElm').h
     if(e==='w'){
       this.cutPointResize(e, ['mr', 'ml'])
     }
@@ -385,8 +491,24 @@ export default {
     }
     if (this.isAuto.h && this.isAuto.w) this.handles = [] 
   },
+  pickColor(){
+    this.$emit('style', this.boxSetting)
+  },
   mouseover(e){
-    console.log(e)
+    this.isShowSetting = true
+    this.isBorder = false
+  },
+  mouseleave(e){
+    this.isShowSetting = false
+    this.isBorder = true
+  },
+  openFolderImg(){
+    this.$refs.btnLoadImg.click()
+  },
+  loadFile(file){
+    this.boxSetting.bg = URL.createObjectURL(file.target.files[0])
+    console.log(this.boxSetting)
+    this.$emit('style', this.boxSetting)
   }
  },
 }
@@ -516,11 +638,16 @@ export default {
 .setting-box * {
   display: none;
 }
+.setting-box-img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+}
 .setting-box.setting-box-active * {
   display: block;
 }
 .list-group .list-group-item {
-  /* background-color: gray;
-  color: #fff; */
+  /* background-color: #95a3bf; */
+  /* color: #fff; */
 }
 </style>

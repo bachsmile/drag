@@ -7,7 +7,7 @@
     :reSizeText="reSizeText"
     @size="onSize"
   >
-    <div class="card text-white bg-primary " :style="{'height': getProp(dataItem,'size.h',0), 'width': getProp(dataItem,'size.w',0)}">
+    <div class="card text-white bg-primary " :style="{'height': getProp(dataItem,'size.h',0) +'px', 'width': getProp(dataItem,'size.w',0)} +'px'">
       <img class="card-img-top " :src="imageData" alt="">
       <input
         v-if="!imageData"
@@ -18,7 +18,7 @@
         @change="loadFile($event)"
       >
       <div class="card-body">
-        <h4 class="card-title bgCss">
+        <h4 class="card-title">
           <TextEdit :classList="['styleText','styleInputs']" />
         </h4>
         <p class="card-text">
@@ -26,14 +26,10 @@
         </p>
       </div>
     </div>
-    <div>
-      <box-setting />
-    </div>
   </cm-drag-drop>
 </template>
 
 <script>
-import BoxSetting from '../common/BoxSetting.vue'
 import TextEdit from './../common/edit/TextEdit.vue'
 import CmDragDrop from './../common/CmDragDrop.vue'
 import Objects from '@/utils/Object.js'
@@ -41,7 +37,7 @@ import appMixin from '@/mixins/appMixin.js'
 
 export default {
   name: 'CardDrag',
-  components: { TextEdit, CmDragDrop, BoxSetting},
+  components: { TextEdit, CmDragDrop},
   mixins: [appMixin],
   props: {
     option: {
@@ -90,8 +86,5 @@ export default {
   font-size: 36px;
   font-weight: 500;
   line-height: 1.2;
-}
-.bgCss {
-  background-color: red;
 }
 </style>

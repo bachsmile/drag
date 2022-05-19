@@ -10,10 +10,7 @@ export default {
 }
 </script>
 
-<style scoped>
-.bgCss {
-  background: #fff;
-}
+<style>
 </style>>
 
 

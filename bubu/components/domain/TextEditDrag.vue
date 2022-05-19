@@ -5,7 +5,6 @@
     :w="getProp(dataItem,'size.w',0)"
     :h="getProp(dataItem,'size.h',0)"
     :reSizeObject="reSizeObject"
-    class="bgCss"
     @size="onSize"
   >
     <TextEdit :style="{'height': getProp(dataItem,'size.h',0), 'width': getProp(dataItem,'size.w',0)}" :classList="['styleText','styleInputs']" :textValue="getProp(dataItem,'title','text')" @sizeTxt="sizeTxt" />
@@ -51,7 +50,8 @@ export default {
   
     sizeTxt(e){
       this.reSizeObject = {...e }
-    }
+    },
+
   },
 }
 </script>
